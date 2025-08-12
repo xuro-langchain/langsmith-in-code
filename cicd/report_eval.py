@@ -115,7 +115,7 @@ def process_config(config_path: str, client: Client) -> Dict[str, Any]:
 
 
 def write_markdown_report(
-    results: List[Dict[str, Any]], output_file: str = "cicd/eval_comment.md"
+    results: List[Dict[str, Any]], output_file: str = "eval_comment.md"
 ):
     """Write evaluation results to markdown file."""
     print(f"📝 Writing report to {output_file}")

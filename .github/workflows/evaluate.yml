@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.13"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -47,7 +47,7 @@ jobs:
     if: github.event_name == 'pull_request'
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.13"]
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
@@ -86,7 +86,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: langsmith-eval-configs
-        path: cicd/evaluation_config__*.json
+        path: evaluation_config__*.json
 
 # Post LangSmith evaluation feedback as a PR comment
   evaluation-report:
@@ -104,7 +104,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.11"
+        python-version: "3.13"
 
     - name: Download all LangSmith configs
       uses: actions/download-artifact@v4
@@ -116,7 +116,7 @@ jobs:
 
     - name: Run LangSmith evaluation report
       run: |
-        python cicd/report_eval.py --verbose cicd/evaluation_config__*.json
+        python cicd/report_eval.py
 
 
     - name: Comment PR with evaluation summary
@@ -124,7 +124,7 @@ jobs:
       with:
         script: |
           const fs = require('fs');
-          const comment = fs.readFileSync('cicd/eval_comment.md', 'utf8');
+          const comment = fs.readFileSync('eval_comment.md', 'utf8');
 
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
