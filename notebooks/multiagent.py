@@ -3,21 +3,26 @@ from dotenv import load_dotenv
 
 # Memory and Checkpoint Dependencies
 from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.store.memory import InMemoryStore
 
 # State Dependencies
-from typing_extensions import TypedDict
-from langgraph.managed.is_last_step import RemainingSteps
 from typing import Annotated, List
+from typing_extensions import TypedDict, Optional
+from langchain_core.runnables import RunnableConfig
+from langgraph.graph import StateGraph, START, END
+from langgraph.managed.is_last_step import RemainingSteps
 from langgraph.graph.message import AnyMessage, add_messages
+from pydantic import BaseModel, Field
 
 # Prebuilts
 from langgraph.prebuilt import create_react_agent
 from langgraph_supervisor import create_supervisor
+from langgraph.types import interrupt
 
 # Tools
-from multiagent_tools import invoice_tools, music_tools
+from multiagent_helpers import invoice_tools, music_tools, get_customer_id_from_identifier
 
 
 load_dotenv(dotenv_path="../.env", override=True)
@@ -123,10 +128,94 @@ supervisor_prompt = """
 # Create supervisor workflow
 supervisor_prebuilt_workflow = create_supervisor(
     agents=[invoice_subagent, music_subagent],
-    output_mode="last_message", # alternative is full_history
+    output_mode="full_history", # alternative is full_history
     model=model,
     prompt=(supervisor_prompt), 
     state_schema=State
 )
 
-multiagent = supervisor_prebuilt_workflow.compile(name="music_catalog_subagent", checkpointer=checkpointer, store=in_memory_store)
+supervisor_prebuilt = supervisor_prebuilt_workflow.compile(name="music_catalog_subagent", checkpointer=checkpointer, store=in_memory_store)
+
+# Adding Human in the Loop --------------------------------------------------------------------
+class UserInput(BaseModel):
+    """Schema for parsing user-provided account information."""
+    identifier: str = Field(description = "Identifier, which can be a customer ID, email, or phone number.")
+
+structured_llm = model.with_structured_output(schema=UserInput)
+structured_system_prompt = """You are a customer service representative responsible for extracting customer identifier.\n 
+Only extract the customer's account information from the message history. 
+If they haven't provided the information yet, return an empty string for the file"""
+
+
+
+# Node
+def verify_info(state: State, config: RunnableConfig):
+    """Verify the customer's account by parsing their input and matching it with the database."""
+
+    if state.get("customer_id") is None: 
+        system_instructions = """You are a music store agent, where you are trying to verify the customer identity 
+        as the first step of the customer support process. 
+        Only after their account is verified, you would be able to support them on resolving the issue. 
+        In order to verify their identity, one of their customer ID, email, or phone number needs to be provided.
+        If the customer has not provided their identifier, please ask them for it.
+        If they have provided the identifier but cannot be found, please ask them to revise it."""
+
+        user_input = state["messages"][-1] 
+    
+        # Parse for customer ID
+        parsed_info = structured_llm.invoke([SystemMessage(content=structured_system_prompt)] + [user_input])
+    
+        # Extract details
+        identifier = parsed_info.identifier
+    
+        customer_id = ""
+        # Attempt to find the customer ID
+        if (identifier):
+            customer_id = get_customer_id_from_identifier(identifier)
+    
+        if customer_id != "":
+            intent_message = SystemMessage(
+                content= f"Thank you for providing your information! I was able to verify your account with customer id {customer_id}."
+            )
+            return {
+                  "customer_id": customer_id,
+                  "messages" : [intent_message]
+                  }
+        else:
+          response = model.invoke([SystemMessage(content=system_instructions)]+state['messages'])
+          return {"messages": [response]}
+    else: 
+        pass
+
+
+# Node
+def human_input(state: State, config: RunnableConfig):
+    """ No-op node that should be interrupted on """
+    user_input = interrupt("Please provide input.")
+    return {"messages": [user_input]}
+
+# conditional_edge
+def should_interrupt(state: State, config: RunnableConfig):
+    if state.get("customer_id") is not None:
+        return "continue"
+    else:
+        return "interrupt"
+    
+# Final Graph --------------------------------------------------------------------
+multi_agent_verify = StateGraph(State) # Adding in input state schema 
+multi_agent_verify.add_node("verify_info", verify_info)
+multi_agent_verify.add_node("human_input", human_input)
+multi_agent_verify.add_node("supervisor", supervisor_prebuilt)
+
+multi_agent_verify.add_edge(START, "verify_info")
+multi_agent_verify.add_conditional_edges(
+    "verify_info",
+    should_interrupt,
+    {
+        "continue": "supervisor",
+        "interrupt": "human_input",
+    },
+)
+multi_agent_verify.add_edge("human_input", "verify_info")
+multi_agent_verify.add_edge("supervisor", END)
+multiagent = multi_agent_verify.compile(name="multi_agent_verify", checkpointer=checkpointer, store=in_memory_store)
