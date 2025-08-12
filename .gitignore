@@ -4,3 +4,5 @@ __pycache__/
 langgraph-docs-db
 .ipynb_checkpoints/
 .DS_Store
+.pytest_cache/
+evaluation_config__*.json

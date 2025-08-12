@@ -1,6 +1,7 @@
 azure-identity
 chromadb
 fastapi
+httpx
 ipython
 langchain-anthropic
 langchain-aws
@@ -21,7 +22,11 @@ notebook
 pandas
 protobuf>=3.20.3
 pyarrow
+pydantic
+pydantic-settings
 pyppeteer
+pytest
+pytest-asyncio
 python-dotenv
 openai
 openevals

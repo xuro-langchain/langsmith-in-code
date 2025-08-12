@@ -1,0 +1,134 @@
+name: Comprehensive Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v1
+      with:
+        version: "latest"
+    - name: Cache uv dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          .uv/cache
+          .venv
+        key: ${{ runner.os }}-uv-comprehensive-${{ hashFiles('**/pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-uv-comprehensive-
+    - name: Install dependencies
+      run: uv sync
+
+
+  evaluation-tests:
+    environment: production
+    needs: [setup]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+      LANGSMITH_TRACING: ${{ secrets.LANGSMITH_TRACING }}
+      LANGSMITH_ENDPOINT: ${{ secrets.LANGSMITH_ENDPOINT }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v1
+      with:
+        version: "latest"
+    - name: Cache uv dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          .uv/cache
+          .venv
+        key: ${{ runner.os }}-uv-comprehensive-${{ hashFiles('**/pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-uv-comprehensive-
+    - name: Run evaluation tests
+      run: uv run pytest -m evaluator --junitxml=evaluator-results.xml
+      continue-on-error: false
+    - name: Upload evaluation test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: evaluation-test-results
+        path: evaluator-results.xml
+
+    # Upload evaluation config JSON (LangSmith experiment name + criteria)
+    - name: Upload LangSmith evaluation config
+      uses: actions/upload-artifact@v4
+      with:
+        name: langsmith-eval-configs
+        path: cicd/evaluation_config__*.json
+
+# Post LangSmith evaluation feedback as a PR comment
+  evaluation-report:
+    environment: production
+    needs: evaluation-tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    env:
+      LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+      LANGSMITH_TRACING: ${{ secrets.LANGSMITH_TRACING }}
+      LANGSMITH_ENDPOINT: ${{ secrets.LANGSMITH_ENDPOINT }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Download all LangSmith configs
+      uses: actions/download-artifact@v4
+      with:
+        name: langsmith-eval-configs
+
+    - name: Install LangSmith SDK
+      run: pip install langsmith
+
+    - name: Run LangSmith evaluation report
+      run: |
+        python cicd/report_eval.py --verbose cicd/evaluation_config__*.json
+
+
+    - name: Comment PR with evaluation summary
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const comment = fs.readFileSync('cicd/eval_comment.md', 'utf8');
+
+          await github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });

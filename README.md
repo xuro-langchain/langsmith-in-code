@@ -1,4 +1,4 @@
-# Evals and Tracing
+# LangSmith in Code
 
 This repository contains comprehensive tutorials and examples for implementing evaluations and tracing in code for LangSmith.
 
@@ -7,7 +7,7 @@ This repository contains comprehensive tutorials and examples for implementing e
 
 ### Clone the LangSmith Workshops repo
 ```
-git clone https://github.com/langchain-ai/langsmith-workshops
+git clone https://github.com/xuro-langchain/langsmith-in-code
 ```
 
 ### Create an environment and install dependencies  
