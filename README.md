@@ -14,9 +14,7 @@ git clone https://github.com/xuro-langchain/langsmith-in-code
 ```
 # Ensure you have a recent version of pip and python installed
 $ cd langsmith-in-code
-$ python3 -m venv .venv
-$ source .venv/bin/activate
-$ pip install -r requirements.txt
+$ uv sync
 ```
 
 Create a .env file in the root repo folder using ```.env.example``` as an example.
