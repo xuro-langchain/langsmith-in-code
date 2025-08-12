@@ -65,7 +65,7 @@ async def test_evaluate_graph(dataset_name = "LangGraph 101 Multi-Agent: Final R
     }
 
     safe_name = experiment_results.experiment_name.replace(":", "-").replace("/", "-")
-    config_filename = f"cicd/evaluation_config__{safe_name}.json"
+    config_filename = f"evaluation_config__{safe_name}.json"
     with open(config_filename, "w") as f:
         json.dump(output_metadata, f)
 

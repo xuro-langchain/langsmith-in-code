@@ -86,7 +86,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: langsmith-eval-configs
-        path: cicd/evaluation_config__*.json
+        path: evaluation_config__*.json
 
 # Post LangSmith evaluation feedback as a PR comment
   evaluation-report:
