@@ -15,7 +15,7 @@ from agent.multiagent import multiagent
 
 client = Client()
 
-model = ChatOpenAI(model="o3-mini", temperature=0)
+model = ChatOpenAI(model="o3-mini")
 
 # Using Open Eval pre-built 
 correctness_evaluator = create_async_llm_as_judge(
