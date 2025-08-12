@@ -124,7 +124,7 @@ jobs:
       with:
         script: |
           const fs = require('fs');
-          const comment = fs.readFileSync('cicd/eval_comment.md', 'utf8');
+          const comment = fs.readFileSync('eval_comment.md', 'utf8');
 
           await github.rest.issues.createComment({
             issue_number: context.issue.number,
