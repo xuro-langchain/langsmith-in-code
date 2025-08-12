@@ -205,7 +205,7 @@ Examples:
     if args.config_files:
         config_files = args.config_files
     else:
-        config_files = glob.glob("evaluation_config__*.json")
+        config_files = glob.glob("cicd/evaluation_config__*.json")
 
     if not config_files:
         print("❌ No evaluation config files found.")
