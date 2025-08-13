@@ -162,8 +162,7 @@ async def health_check():
     """
     return {"status": "ok", "message": "Service is running."}
 
-# To run this server (save as main.py):
-# 1. Install dependencies: pip install fastapi uvicorn pydantic pydantic-settings httpx python-dotenv
-# 2. Create a .env file with your GitHub token and repo details.
-# 3. Run with Uvicorn: uvicorn main:app --reload
-# 4. Deploy to a public platform like Render.com.
+# To run this server:
+# 1. Ensure your .env file contains your GitHub token and repo details.
+# 2. Run with Uvicorn: uvicorn cicd.prompthook:app --reload
+# 3. Deploy to a public platform like Render.com.
