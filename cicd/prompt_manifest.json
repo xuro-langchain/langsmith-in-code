@@ -1,0 +1,123 @@
+{
+  "lc": 1,
+  "type": "constructor",
+  "id": [
+    "langchain",
+    "schema",
+    "runnable",
+    "RunnableSequence"
+  ],
+  "kwargs": {
+    "first": {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain",
+        "prompts",
+        "chat",
+        "ChatPromptTemplate"
+      ],
+      "kwargs": {
+        "messages": [
+          {
+            "lc": 1,
+            "type": "constructor",
+            "id": [
+              "langchain_core",
+              "prompts",
+              "chat",
+              "SystemMessagePromptTemplate"
+            ],
+            "kwargs": {
+              "prompt": {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain_core",
+                  "prompts",
+                  "prompt",
+                  "PromptTemplate"
+                ],
+                "kwargs": {
+                  "input_variables": [],
+                  "template_format": "mustache",
+                  "template": "You are a chatbot."
+                }
+              }
+            }
+          },
+          {
+            "lc": 1,
+            "type": "constructor",
+            "id": [
+              "langchain_core",
+              "prompts",
+              "chat",
+              "HumanMessagePromptTemplate"
+            ],
+            "kwargs": {
+              "prompt": {
+                "lc": 1,
+                "type": "constructor",
+                "id": [
+                  "langchain_core",
+                  "prompts",
+                  "prompt",
+                  "PromptTemplate"
+                ],
+                "kwargs": {
+                  "input_variables": [
+                    "question"
+                  ],
+                  "template_format": "mustache",
+                  "template": "{{question}}"
+                }
+              }
+            }
+          }
+        ],
+        "input_variables": [
+          "question"
+        ]
+      }
+    },
+    "last": {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain",
+        "schema",
+        "runnable",
+        "RunnableBinding"
+      ],
+      "kwargs": {
+        "bound": {
+          "lc": 1,
+          "type": "constructor",
+          "id": [
+            "langchain",
+            "chat_models",
+            "openai",
+            "ChatOpenAI"
+          ],
+          "kwargs": {
+            "temperature": 1,
+            "top_p": 1,
+            "presence_penalty": 0,
+            "frequency_penalty": 0,
+            "model": "gpt-4.1-mini",
+            "extra_headers": {},
+            "openai_api_key": {
+              "id": [
+                "OPENAI_API_KEY"
+              ],
+              "lc": 1,
+              "type": "secret"
+            }
+          }
+        },
+        "kwargs": {}
+      }
+    }
+  }
+}
