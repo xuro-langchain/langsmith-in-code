@@ -17,7 +17,7 @@ class AppConfig(BaseSettings):
     GITHUB_TOKEN: str
     GITHUB_REPO_OWNER: str
     GITHUB_REPO_NAME: str
-    GITHUB_FILE_PATH: str = "prompt_manifest.json"
+    GITHUB_FILE_PATH: str = "cicd/prompt_manifest.json"
     GITHUB_BRANCH: str = "main"
 
     model_config = SettingsConfigDict(
@@ -107,8 +107,11 @@ async def commit_manifest_to_github(payload: WebhookPayload) -> Dict[str, Any]:
             data_to_commit["sha"] = current_file_sha
 
         try:
-            print("Repo file URL: ", repo_file_url)
-            print("Data to commit: ", data_to_commit)
+            print(f"PUT URL: {repo_file_url}")
+            print(f"File path: {settings.GITHUB_FILE_PATH}")
+            print(f"Branch: {settings.GITHUB_BRANCH}")
+            print(f"Repo owner: {settings.GITHUB_REPO_OWNER}")
+            print(f"Repo name: {settings.GITHUB_REPO_NAME}")
             response_put = await client.put(repo_file_url, headers=headers, json=data_to_commit)
             response_put.raise_for_status()
             return response_put.json()
