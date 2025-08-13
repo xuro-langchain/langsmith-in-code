@@ -107,6 +107,8 @@ async def commit_manifest_to_github(payload: WebhookPayload) -> Dict[str, Any]:
             data_to_commit["sha"] = current_file_sha
 
         try:
+            print("Repo file URL: ", repo_file_url)
+            print("Data to commit: ", data_to_commit)
             response_put = await client.put(repo_file_url, headers=headers, json=data_to_commit)
             response_put.raise_for_status()
             return response_put.json()
