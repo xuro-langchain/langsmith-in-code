@@ -31,8 +31,12 @@ Evaluations are in the ```evaluations.ipynb``` notebook and Tracing is in the ``
 ## Adding CICD
 There are two CICD modules included as part of this package
 1. Running offline evaluations using Github Actions. The relevant files are
-    * ```.github/workflows/evaluate.yml```: Contains the Github Action. Requires you to create a fork of this repo and to create an environment called ```production``` which you configure secrets on. This Github Action will trigger evaluations on pull request
+    * ```.github/workflows/evaluate.yml```: Contains the Github Action. 
+        * Requires you to create a fork of this repo and to create an environment called ```production``` which you configure secrets on. 
+        * This Github Action will trigger evaluations on pull request
     * ```cicd/test_evaluator.py```: Simple pytest evaluation that will run through the Github Action
     * ```cicd/report_eval.py```: Packages evaluation results to be attached to a pull request as a comment
 2. Configuring Prompt Commit Webhooks. The relevant files are
-    * ```cicd/prompthook.py```: Spins up a server to receive webhook notifications from LangSmith. Can be spun up locally by running ```uvicorn cicd.prompthook:app --reload``` in the root directory of this repo. Requires deployment to an external service like Render to connect to LangSmith [see detailed instructions here](https://docs.smith.langchain.com/prompt_engineering/tutorials/prompt_commit)
+    * ```cicd/prompthook.py```: Spins up a server to receive webhook notifications from LangSmith. 
+        * Can be spun up locally by running ```uvicorn cicd.prompthook:app --reload``` in the root directory of this repo. 
+        * Requires deployment to an external service like Render to connect to LangSmith [see detailed instructions here](https://docs.smith.langchain.com/prompt_engineering/tutorials/prompt_commit)

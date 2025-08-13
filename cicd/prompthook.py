@@ -17,7 +17,7 @@ class AppConfig(BaseSettings):
     GITHUB_TOKEN: str
     GITHUB_REPO_OWNER: str
     GITHUB_REPO_NAME: str
-    GITHUB_FILE_PATH: str = "cicd/prompt_manifest.json"
+    GITHUB_FILE_PATH: str = "prompt_manifest.json"
     GITHUB_BRANCH: str = "main"
 
     model_config = SettingsConfigDict(
