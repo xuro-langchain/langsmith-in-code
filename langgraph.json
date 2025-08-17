@@ -4,7 +4,7 @@
       "Multiagent": "./agent/multiagent.py:multiagent"
     },
     "env": ".env",
-    "python_version": "3.11",
+    "python_version": "3.13",
     "dependencies": [
       "."
     ]
