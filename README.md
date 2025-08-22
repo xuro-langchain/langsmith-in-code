@@ -1,6 +1,6 @@
 # LangSmith in Code
 
-This repository contains comprehensive tutorials and examples for implementing evaluations and tracing in code for LangSmith. Enjoy!
+This repository contains comprehensive tutorials and examples for implementing evaluations and tracing in code for LangSmith.
 
 
 ## Pre-work
