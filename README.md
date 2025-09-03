@@ -5,7 +5,7 @@ This repository contains comprehensive tutorials and examples for implementing e
 
 ## Pre-work
 
-### Clone the LangSmith Workshops repo
+### Clone the LangSmith in Code repo
 ```
 git clone https://github.com/xuro-langchain/langsmith-in-code
 ```
