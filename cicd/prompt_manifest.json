@@ -2,14 +2,16 @@
   "lc": 1,
   "type": "constructor",
   "id": [
-    "langchain",
+    "langchain_core",
     "prompts",
-    "chat",
-    "ChatPromptTemplate"
+    "structured",
+    "StructuredPrompt"
   ],
   "kwargs": {
     "input_variables": [
-      "email"
+      "input",
+      "output",
+      "reference"
     ],
     "messages": [
       {
@@ -33,7 +35,7 @@
             ],
             "kwargs": {
               "input_variables": [],
-              "template": "\n< Role >\nYour role is to triage incoming emails based upon instructs and background information below.\n</ Role >\n\n< Background >\nI'm Robert, a software engineer at LangChain.\n</ Background >\n\n< Instructions >\nCategorize each email into one of three categories:\n1. IGNORE - Emails that are not worth responding to or tracking\n2. NOTIFY - Important information that worth notification but doesn't require a response\n3. RESPOND - Emails that need a direct response\nClassify the below email into one of these categories.\n</ Instructions >\n\n< Rules >\nEmails that are not worth responding to:\n- Marketing newsletters and promotional emails\n- Spam or suspicious emails\n- CC'd on FYI threads with no direct questions\n\nThere are also other things that should be known about, but don't require an email response. For these, you should notify (using the `notify` response). Examples of this include:\n- Team member out sick or on vacation\n- Build system notifications or deployments\n- Project status updates without action items\n- Important company announcements\n- FYI emails that contain relevant information for current projects\n- HR Department deadline reminders\n- GitHub notifications\n\nEmails that are worth responding to:\n- Direct questions from team members requiring expertise\n- Meeting requests requiring confirmation\n- Critical bug reports related to team's projects\n- Requests from management requiring acknowledgment\n- Client inquiries about project status or features\n- Technical questions about documentation, code, or APIs (especially questions about missing endpoints or features)\n- Personal reminders related to family (wife / daughter)\n- Personal reminder related to self-care (doctor appointments, etc)\n</ Rules >\n",
+              "template": "\nYou are an expert data analyst judging whether the action an AI agent is taking is the correct one. This AI agent is tasked with responding to emails. You should evaluate the agent's output against the reference output.\n\nA correct output:\n- Attempts to call the same tool that was called in the reference output\n- Passes in suitable arguments to the tool call. The output doesn't need to match the reference output exactly, but should be similar\n- Ensure that times mentioned in the reference output are mentioned in the output\n",
               "template_format": "f-string"
             },
             "name": "PromptTemplate"
@@ -61,16 +63,33 @@
             ],
             "kwargs": {
               "input_variables": [
-                "email"
+                "input",
+                "output",
+                "reference"
               ],
-              "template": "Please determine how to handle the following email thread:: {email}",
+              "template": "\nPlease grade the following example according to the above instructions:\n\n<example>\n<input>\n{input}\n</input>\n\n<output>\n{output}\n</output>\n\n<reference_outputs>\n{reference}\n</reference_outputs>\n</example>\n",
               "template_format": "f-string"
             },
             "name": "PromptTemplate"
           }
         }
       }
-    ]
+    ],
+    "schema_": {
+      "properties": {
+        "correctness": {
+          "description": "Is the agents action correct based on the reference output?",
+          "title": "Correctness",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "correctness"
+      ],
+      "type": "object",
+      "description": "Extract information from the user's response.",
+      "Title": "extract"
+    }
   },
-  "name": "ChatPromptTemplate"
+  "name": "StructuredPrompt"
 }
