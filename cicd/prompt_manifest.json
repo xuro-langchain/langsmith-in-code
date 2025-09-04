@@ -2,13 +2,11 @@
   "lc": 1,
   "type": "constructor",
   "id": [
-    "langchain",
-    "schema",
-    "runnable",
-    "RunnableSequence"
+    "langsmith",
+    "playground",
+    "PromptPlayground"
   ],
   "kwargs": {
-    "name": "Dangerous Input",
     "first": {
       "lc": 1,
       "type": "constructor",
@@ -89,7 +87,7 @@
           "properties": {
             "dangerous": {
               "type": "boolean",
-              "description": "Is the output dangerous?"
+              "description": "Is the input dangerous?"
             },
             "comment": {
               "type": "string",
