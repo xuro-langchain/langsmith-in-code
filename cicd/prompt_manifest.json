@@ -2,212 +2,75 @@
   "lc": 1,
   "type": "constructor",
   "id": [
-    "langsmith",
-    "playground",
-    "PromptPlayground"
+    "langchain",
+    "prompts",
+    "chat",
+    "ChatPromptTemplate"
   ],
   "kwargs": {
-    "first": {
-      "lc": 1,
-      "type": "constructor",
-      "id": [
-        "langchain",
-        "prompts",
-        "chat",
-        "ChatPromptTemplate"
-      ],
-      "kwargs": {
-        "input_variables": [
-          "messages"
+    "input_variables": [
+      "email_input"
+    ],
+    "messages": [
+      {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain",
+          "prompts",
+          "chat",
+          "SystemMessagePromptTemplate"
         ],
-        "messages": [
-          {
-            "lc": 1,
-            "type": "constructor",
-            "id": [
-              "langchain",
-              "prompts",
-              "chat",
-              "SystemMessagePromptTemplate"
-            ],
-            "kwargs": {
-              "prompt": {
-                "lc": 1,
-                "type": "constructor",
-                "id": [
-                  "langchain",
-                  "prompts",
-                  "prompt",
-                  "PromptTemplate"
-                ],
-                "kwargs": {
-                  "input_variables": [],
-                  "template": "\n< Role >\nYou are a top-notch executive assistant who cares about helping your executive perform as well as possible.\n</ Role >\n\n< Tools >\nYou have access to the following tools to help manage communications and schedule:\n\n1. write_email(to, subject, content) - Send emails to specified recipients\n2. schedule_meeting(attendees, subject, duration_minutes, preferred_day, start_time) - Schedule calendar meetings\n3. check_calendar_availability(day) - Check available time slots for a given day\n</ Tools >\n\n< Instructions >\nWhen handling emails, follow these steps:\n1. Carefully analyze the email content and purpose\n3. For responding to the email, draft a response email with the write_email tool\n4. For meeting requests, use the check_calendar_availability tool to find open time slots\n5. To schedule a meeting, use the schedule_meeting tool with a datetime object for the preferred_day parameter\n   - Today's date is 2025-09-07 - use this for scheduling meetings accurately\n6. If you scheduled a meeting, then draft a short response email using the write_email tool\n7. After using the write_email tool, the task is complete\n8. If you have sent the email, then use the Done tool to indicate that the task is complete\n</ Instructions >\n\n< Background >\nI'm Robert, a software engineer at LangChain.\n</ Background >\n\n< Response Preferences >\nUse professional and concise language. If the e-mail mentions a deadline, make sure to explicitly acknowledge and reference the deadline in your response.\n\nWhen responding to technical questions that require investigation:\n- Clearly state whether you will investigate or who you will ask\n- Provide an estimated timeline for when you'll have more information or complete the task\n\nWhen responding to event or conference invitations:\n- Always acknowledge any mentioned deadlines (particularly registration deadlines)\n- If workshops or specific topics are mentioned, ask for more specific details about them\n- If discounts (group or early bird) are mentioned, explicitly request information about them\n- Don't commit \n\nWhen responding to collaboration or project-related requests:\n- Acknowledge any existing work or materials mentioned (drafts, slides, documents, etc.)\n- Explicitly mention reviewing these materials before or during the meeting\n- When scheduling meetings, clearly state the specific day, date, and time proposed.\n\nWhen responding to meeting scheduling requests:\n- If the recipient is asking for a meeting commitment, verify availability for all time slots mentioned in the original email and then commit to one of the proposed times based on your availability by scheduling the meeting. Or, say you can't make it at the time proposed.\n- If availability is asked for, then check your calendar for availability and send an email proposing multiple time options when available. Do NOT schedule meetings\n- Mention the meeting duration in your response to confirm you've noted it correctly.\n- Reference the meeting's purpose in your response.\n</ Response Preferences >\n\n< Calendar Preferences >\n30 minute meetings are preferred, but 15 minute meetings are also acceptable.\nTimes later in the day are preferable.\n</ Calendar Preferences >\n",
-                  "template_format": "f-string"
-                },
-                "name": "PromptTemplate"
-              }
-            }
-          },
-          {
-            "lc": 1,
-            "type": "constructor",
-            "id": [
-              "langchain",
-              "prompts",
-              "chat",
-              "MessagesPlaceholder"
-            ],
-            "kwargs": {
-              "variable_name": "messages"
-            }
-          }
-        ]
-      },
-      "name": "ChatPromptTemplate"
-    },
-    "last": {
-      "lc": 1,
-      "type": "constructor",
-      "id": [
-        "langchain",
-        "schema",
-        "runnable",
-        "RunnableBinding"
-      ],
-      "kwargs": {
-        "bound": {
-          "lc": 1,
-          "type": "constructor",
-          "id": [
-            "langchain",
-            "chat_models",
-            "openai",
-            "ChatOpenAI"
-          ],
-          "kwargs": {
-            "model_name": "gpt-4o-mini",
-            "openai_api_key": {
-              "lc": 1,
-              "type": "secret",
-              "id": [
-                "OPENAI_API_KEY"
-              ]
-            },
-            "output_version": "v0"
-          },
-          "name": "ChatOpenAI"
-        },
         "kwargs": {
-          "tools": [
-            {
-              "type": "function",
-              "function": {
-                "name": "schedule_meeting",
-                "description": "Schedule a calendar meeting.",
-                "parameters": {
-                  "properties": {
-                    "attendees": {
-                      "items": {
-                        "type": "string"
-                      },
-                      "type": "array"
-                    },
-                    "subject": {
-                      "type": "string"
-                    },
-                    "duration_minutes": {
-                      "type": "integer"
-                    },
-                    "preferred_day": {
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "start_time": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "attendees",
-                    "subject",
-                    "duration_minutes",
-                    "preferred_day",
-                    "start_time"
-                  ],
-                  "type": "object"
-                }
-              }
+          "prompt": {
+            "lc": 1,
+            "type": "constructor",
+            "id": [
+              "langchain",
+              "prompts",
+              "prompt",
+              "PromptTemplate"
+            ],
+            "kwargs": {
+              "input_variables": [],
+              "template": "\n< Role >\nYour role is to triage incoming emails based upon instructs and background information below.\n</ Role >\n\n< Background >\nI'm Robert, a software engineer at LangChain.\n</ Background >\n\n< Instructions >\nCategorize each email into one of three categories:\n1. IGNORE - Emails that are not worth responding to or tracking\n2. NOTIFY - Important information that worth notification but doesn't require a response\n3. RESPOND - Emails that need a direct response\nClassify the below email into one of these categories.\n</ Instructions >\n\n< Rules >\nEmails that are not worth responding to:\n- Marketing newsletters and promotional emails\n- Spam or suspicious emails\n- CC'd on FYI threads with no direct questions\n\nThere are also other things that should be known about, but don't require an email response. For these, you should notify (using the `notify` response). Examples of this include:\n- Team member out sick or on vacation\n- Build system notifications or deployments\n- Project status updates without action items\n- Important company announcements\n- FYI emails that contain relevant information for current projects\n- HR Department deadline reminders\n- GitHub notifications\n\nEmails that are worth responding to:\n- Direct questions from team members requiring expertise\n- Meeting requests requiring confirmation\n- Critical bug reports related to team's projects\n- Requests from management requiring acknowledgment\n- Client inquiries about project status or features\n- Technical questions about documentation, code, or APIs (especially questions about missing endpoints or features)\n- Personal reminders related to family (wife / daughter)\n- Personal reminder related to self-care (doctor appointments, etc)\n</ Rules >\n",
+              "template_format": "f-string"
             },
-            {
-              "type": "function",
-              "function": {
-                "name": "check_calendar_availability",
-                "description": "Check calendar availability for a given day.",
-                "parameters": {
-                  "properties": {
-                    "day": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "day"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            {
-              "type": "function",
-              "function": {
-                "name": "write_email",
-                "description": "Write and send an email.",
-                "parameters": {
-                  "properties": {
-                    "to": {
-                      "type": "string"
-                    },
-                    "subject": {
-                      "type": "string"
-                    },
-                    "content": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "to",
-                    "subject",
-                    "content"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            {
-              "type": "function",
-              "function": {
-                "name": "Done",
-                "description": "E-mail has been sent.",
-                "parameters": {
-                  "properties": {
-                    "done": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "done"
-                  ],
-                  "type": "object"
-                }
-              }
-            }
-          ],
-          "parallel_tool_calls": false,
-          "tool_choice": "required"
-        },
-        "config": {}
+            "name": "PromptTemplate"
+          }
+        }
       },
-      "name": "ChatOpenAI"
-    }
+      {
+        "lc": 1,
+        "type": "constructor",
+        "id": [
+          "langchain",
+          "prompts",
+          "chat",
+          "HumanMessagePromptTemplate"
+        ],
+        "kwargs": {
+          "prompt": {
+            "lc": 1,
+            "type": "constructor",
+            "id": [
+              "langchain",
+              "prompts",
+              "prompt",
+              "PromptTemplate"
+            ],
+            "kwargs": {
+              "input_variables": [
+                "email_input"
+              ],
+              "template": "Please determine how to handle the following email thread: {email_input}",
+              "template_format": "f-string"
+            },
+            "name": "PromptTemplate"
+          }
+        }
+      }
+    ]
   },
-  "name": "RunnableSequence"
+  "name": "ChatPromptTemplate"
 }
