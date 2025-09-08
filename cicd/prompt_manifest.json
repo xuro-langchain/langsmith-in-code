@@ -44,7 +44,7 @@
                 "kwargs": {
                   "input_variables": [],
                   "template_format": "mustache",
-                  "template": "You are an expert data labeler in charge of reviewing AI outputs. The AI outputs may involve the AI searching the web or other data sources to ground its answer. Your job is to assess how complete the answer to a given question is\n\n<Rubric>\nA complete answer:\n- Provides a full answer to all aspects of the question.\nWhen scoring, you should deduct points for:\n- Indication that the sources available to the AI were not sufficient to answer the question.\n- Vague or unhelpful answers that do not address the question.\n- Significant portions of the question(s) left unaddressed in the answer\n</Rubric>"
+                  "template": "You are an expert data labeler in charge of reviewing AI outputs. The AI outputs may involve the AI searching the web or other data sources to ground its answer. Your job is to assess how complete the answer to a given question is\n\n<Rubric>\nA complete answer:\n- Provides a correct answer that fully answers the question.\nWhen scoring, you should deduct points for:\n- Indication that the sources available to the AI were not sufficient to answer the question.\n- Vague or unhelpful answers that are unrelated to the question.\n- Large portions (50% or more) of the question unaddressed in the answer\n</Rubric>"
                 }
               }
             }
@@ -87,7 +87,7 @@
           "properties": {
             "completeness": {
               "type": "number",
-              "description": "Is the output a complete answer to the question? Min (0): Incomplete answer that does not address the question or has insufficient sources| Max (1): Complete answer that fully addresses the question",
+              "description": "Is the output a complete answer to the question? Min (0): Incomplete answer that does not address the question at all| Max (1): Complete answer that addresses the question",
               "minimum": 0,
               "maximum": 1
             },
