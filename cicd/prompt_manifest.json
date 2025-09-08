@@ -2,13 +2,11 @@
   "lc": 1,
   "type": "constructor",
   "id": [
-    "langchain",
-    "schema",
-    "runnable",
-    "RunnableSequence"
+    "langsmith",
+    "playground",
+    "PromptPlayground"
   ],
   "kwargs": {
-    "name": "correcntess",
     "first": {
       "lc": 1,
       "type": "constructor",
@@ -94,6 +92,10 @@
             "correctness": {
               "type": "boolean",
               "description": "Did the agent take the correct next action as defined above?"
+            },
+            "comment": {
+              "type": "string",
+              "description": "Reasoning for the score"
             }
           },
           "required": [
