@@ -2,14 +2,16 @@
   "lc": 1,
   "type": "constructor",
   "id": [
-    "langchain",
+    "langchain_core",
     "prompts",
-    "chat",
-    "ChatPromptTemplate"
+    "structured",
+    "StructuredPrompt"
   ],
   "kwargs": {
     "input_variables": [
-      "email_input"
+      "input",
+      "output",
+      "reference"
     ],
     "messages": [
       {
@@ -33,7 +35,7 @@
             ],
             "kwargs": {
               "input_variables": [],
-              "template": "\n< Role >\nYour role is to triage incoming emails based upon instructs and background information below.\n</ Role >\n\n< Background >\nI'm Robert, a software engineer at LangChain.\n</ Background >\n\n< Instructions >\nCategorize each email into one of three categories:\n1. IGNORE - Emails that are not worth responding to or tracking\n2. NOTIFY - Important information that worth notification but doesn't require a response\n3. RESPOND - Emails that need a direct response\nClassify the below email into one of these categories.\n</ Instructions >\n\n< Rules >\nEmails that are not worth responding to:\n- Marketing newsletters and promotional emails\n- Spam or suspicious emails\n- CC'd on FYI threads with no direct questions\n\nThere are also other things that should be known about, but don't require an email response. For these, you should notify (using the `notify` response). Examples of this include:\n- Team member out sick or on vacation\n- Build system notifications or deployments\n- Project status updates without action items\n- Important company announcements\n- FYI emails that contain relevant information for current projects\n- HR Department deadline reminders\n- GitHub notifications\n\nEmails that are worth responding to:\n- Direct questions from team members requiring expertise\n- Meeting requests requiring confirmation\n- Critical bug reports related to team's projects\n- Requests from management requiring acknowledgment\n- Client inquiries about project status or features\n- Technical questions about documentation, code, or APIs (especially questions about missing endpoints or features)\n- Personal reminders related to family (wife / daughter)\n- Personal reminder related to self-care (doctor appointments, etc)\n</ Rules >\n",
+              "template": "You are an expert data labeler given the task of grading AI outputs. The AI will be deciding what the correct next action to take is given a conversation history. The correct action may or may not involve a tool call. You have been given the AIs output, as well as a reference output of what a suitable next action would look like.\n\nPlease grade whether the AI submitted the correct next action. Note: Tool calls do not need to be identical to be considered correct. As long as the arguments supplied make sense in context of the input, and are roughly aligned with the reference output, the output should be treated as correct.\n\nFor example, if the AI needs to schedule an hour long meeting, and there is availability from 9 AM - 12 AM, a meeting scheduled at 9 AM and a meeting scheduled at 10 AM should both be considered correct answers. \n\nREMEMBER: Only evaluate the output's correctness as a next action. If the output does not contain all the steps until the task is complete, that is okay. Only penalize the output if it's missing steps from the reference output.\n",
               "template_format": "f-string"
             },
             "name": "PromptTemplate"
@@ -61,16 +63,32 @@
             ],
             "kwargs": {
               "input_variables": [
-                "email_input"
+                "input",
+                "output",
+                "reference"
               ],
-              "template": "Please determine how to handle the following email thread: {email_input}",
+              "template": "\nPlease grade the following example according to the above instructions:\n\n<example>\n<input>\n{input}\n</input>\n\n<output>\n{output}\n</output>\n\n<reference_outputs>\n{reference}\n</reference_outputs>\n</example>\n",
               "template_format": "f-string"
             },
             "name": "PromptTemplate"
           }
         }
       }
-    ]
+    ],
+    "schema_": {
+      "properties": {
+        "correctness": {
+          "description": "Is the agents action correct based on the reference output?",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "correctness"
+      ],
+      "title": "extract",
+      "type": "object",
+      "description": "Extract information from the user's response."
+    }
   },
-  "name": "ChatPromptTemplate"
+  "name": "StructuredPrompt"
 }
