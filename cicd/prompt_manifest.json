@@ -44,10 +44,9 @@
                 ],
                 "kwargs": {
                   "input_variables": [],
-                  "template": "\nYou are an expert data labeler given the task of grading AI outputs. The AI will be deciding what the correct next action to take is given a conversation history. The correct action may or may not involve a tool call. You have been given the AIs output, as well as a reference output of what a suitable next action would look like.\n\nPlease grade whether the AI submitted the correct next action. Note: Tool calls do not need to be identical to be considered correct. As long as the arguments supplied make sense in context of the input, and are roughly aligned with the reference output, the output should be treated as correct.\n\nFor example, if the AI needs to schedule an hour long meeting, and there is availability from 9 AM - 12 AM, a meeting scheduled at 9 AM and a meeting scheduled at 10 AM should both be considered correct answers. ",
-                  "template_format": "mustache"
-                },
-                "name": "PromptTemplate"
+                  "template_format": "mustache",
+                  "template": "\nYou are an expert data labeler given the task of grading AI outputs. The AI will be deciding what the correct next action to take is given a conversation history. The correct action may or may not involve a tool call. You have been given the AIs output, as well as a reference output of what a suitable next action would look like.\n\nPlease grade whether the AI submitted the correct next action. Note: Tool calls do not need to be identical to be considered correct. As long as the arguments supplied make sense in context of the input, and are roughly aligned with the reference output, the output should be treated as correct.\n\nFor example, if the AI needs to schedule an hour long meeting, and there is availability from 9 AM - 12 AM, a meeting scheduled at 9 AM and a meeting scheduled at 10 AM should both be considered correct answers. \n\nREMEMBER: Only evaluate the output's correctness as a next action. If the output does not contain all the steps until the task is complete, that is okay. Only penalize the output if it's missing steps from the reference output."
+                }
               }
             }
           },
@@ -76,10 +75,9 @@
                     "output",
                     "reference"
                   ],
-                  "template": "Please grade the following example according to the above instructions:\n\n<example>\n<input>\n{{input}}\n</input>\n\n<output>\n{{output}}\n</output>\n\n<reference_outputs>\n{{reference}}\n</reference_outputs>\n</example>",
-                  "template_format": "mustache"
-                },
-                "name": "PromptTemplate"
+                  "template_format": "mustache",
+                  "template": "Please grade the following example according to the above instructions:\n\n<example>\n<input>\n{{input}}\n</input>\n\n<output>\n{{output}}\n</output>\n\n<reference_outputs>\n{{reference}}\n</reference_outputs>\n</example>"
+                }
               }
             }
           }
