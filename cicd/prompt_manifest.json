@@ -8,28 +8,22 @@
     "RunnableSequence"
   ],
   "kwargs": {
-    "name": "correctness",
     "first": {
       "lc": 1,
       "type": "constructor",
       "id": [
-        "langchain_core",
+        "langchain",
         "prompts",
-        "structured",
-        "StructuredPrompt"
+        "chat",
+        "ChatPromptTemplate"
       ],
       "kwargs": {
-        "input_variables": [
-          "input",
-          "output",
-          "reference"
-        ],
         "messages": [
           {
             "lc": 1,
             "type": "constructor",
             "id": [
-              "langchain",
+              "langchain_core",
               "prompts",
               "chat",
               "SystemMessagePromptTemplate"
@@ -39,17 +33,16 @@
                 "lc": 1,
                 "type": "constructor",
                 "id": [
-                  "langchain",
+                  "langchain_core",
                   "prompts",
                   "prompt",
                   "PromptTemplate"
                 ],
                 "kwargs": {
                   "input_variables": [],
-                  "template": "Determine whether the success criteria has been met in the reference output",
-                  "template_format": "mustache"
-                },
-                "name": "PromptTemplate"
+                  "template_format": "mustache",
+                  "template": "You are a chatbot."
+                }
               }
             }
           },
@@ -57,7 +50,7 @@
             "lc": 1,
             "type": "constructor",
             "id": [
-              "langchain",
+              "langchain_core",
               "prompts",
               "chat",
               "HumanMessagePromptTemplate"
@@ -67,65 +60,63 @@
                 "lc": 1,
                 "type": "constructor",
                 "id": [
-                  "langchain",
+                  "langchain_core",
                   "prompts",
                   "prompt",
                   "PromptTemplate"
                 ],
                 "kwargs": {
                   "input_variables": [
-                    "input",
-                    "output",
-                    "reference"
+                    "question"
                   ],
-                  "template": "Please grade the following example according to the above instructions:\n\n<example>\n<input>\n{{input}}\n</input>\n\n<output>\n{{output}}\n</output>\n\n<reference_outputs>\n{{reference}}\n</reference_outputs>\n</example>",
-                  "template_format": "mustache"
-                },
-                "name": "PromptTemplate"
+                  "template_format": "mustache",
+                  "template": "{{question}}"
+                }
               }
             }
           }
         ],
-        "schema_": {
-          "title": "extract",
-          "description": "Extract information from the user's response.",
-          "type": "object",
-          "properties": {
-            "correctness": {
-              "type": "boolean",
-              "description": "Is the submission correct, accurate, and factual?"
-            }
-          },
-          "required": [
-            "correctness"
-          ]
-        }
-      },
-      "name": "StructuredPrompt"
+        "input_variables": [
+          "question"
+        ]
+      }
     },
     "last": {
       "lc": 1,
       "type": "constructor",
       "id": [
         "langchain",
-        "chat_models",
-        "openai",
-        "ChatOpenAI"
+        "schema",
+        "runnable",
+        "RunnableBinding"
       ],
       "kwargs": {
-        "temperature": 1,
-        "top_p": 1,
-        "presence_penalty": null,
-        "frequency_penalty": null,
-        "model": "gpt-5-mini",
-        "extra_headers": {},
-        "openai_api_key": {
-          "id": [
-            "OPENAI_API_KEY"
-          ],
+        "bound": {
           "lc": 1,
-          "type": "secret"
-        }
+          "type": "constructor",
+          "id": [
+            "langchain",
+            "chat_models",
+            "openai",
+            "ChatOpenAI"
+          ],
+          "kwargs": {
+            "temperature": 1,
+            "top_p": 1,
+            "presence_penalty": 0,
+            "frequency_penalty": 0,
+            "model": "gpt-4.1-mini",
+            "extra_headers": {},
+            "openai_api_key": {
+              "id": [
+                "OPENAI_API_KEY"
+              ],
+              "lc": 1,
+              "type": "secret"
+            }
+          }
+        },
+        "kwargs": {}
       }
     }
   }
