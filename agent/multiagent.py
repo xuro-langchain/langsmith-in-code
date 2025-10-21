@@ -219,3 +219,5 @@ multi_agent_verify.add_conditional_edges(
 multi_agent_verify.add_edge("human_input", "verify_info")
 multi_agent_verify.add_edge("supervisor", END)
 multiagent = multi_agent_verify.compile(name="multi_agent_verify", checkpointer=checkpointer, store=in_memory_store)
+
+multiagent_studio = multi_agent_verify.compile(name="multi_agent_studio")
