@@ -6,3 +6,5 @@ langgraph-docs-db
 .DS_Store
 .pytest_cache/
 evaluation_config__*.json
+
+.langgraph_api/
