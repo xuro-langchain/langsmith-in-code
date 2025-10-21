@@ -9,7 +9,7 @@ from langgraph.store.memory import InMemoryStore
 
 # State Dependencies
 from typing import Annotated, List
-from typing_extensions import TypedDict, Optional
+from typing_extensions import TypedDict, Optional, NotRequired
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph, START, END
 from langgraph.managed.is_last_step import RemainingSteps
@@ -37,9 +37,9 @@ checkpointer = MemorySaver()
 
 
 class State(TypedDict):
-    customer_id: str
+    customer_id: NotRequired[str]
     messages: Annotated[list[AnyMessage], add_messages]
-    remaining_steps: RemainingSteps 
+    remaining_steps: NotRequired[RemainingSteps] 
 
 ## Defining Invoice Subagent --------------------------------------------------------------------
 invoice_subagent_prompt = """
