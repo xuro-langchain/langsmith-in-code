@@ -8,3 +8,4 @@ langgraph-docs-db
 evaluation_config__*.json
 
 .langgraph_api/
+.claude/
